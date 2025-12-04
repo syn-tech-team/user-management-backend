@@ -1,12 +1,12 @@
 -- =====================================================
--- Complete Database Setup Script for Distributed Environment
+-- Database Setup Script for Distributed Environment
 -- =====================================================
 -- This script creates the database, tables, and populates data
 -- for a distributed user management system
 -- =====================================================
-
 -- 1. Create Database
 -- =====================================================
+drop database if exists userdb20251202;
 create database userdb20251202;
 
 -- Use the created database
@@ -18,9 +18,11 @@ USE userdb20251202;
 -- Create USERS table (distributed-friendly with UUID primary keys)
 CREATE TABLE USERS (
   ID VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
-  NAME VARCHAR(255) NOT NULL,
+  FIRST_NAME VARCHAR(255) NOT NULL,
+  LAST_NAME VARCHAR(255) NOT NULL,
   EMAIL VARCHAR(255) NOT NULL UNIQUE,
   PASSWORD VARCHAR(255) NOT NULL,
+  IMAGE VARCHAR(1024),
   CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UPDATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_email (EMAIL),
@@ -54,25 +56,25 @@ CREATE TABLE ADDRESSES (
 -- =====================================================
 
 -- Insert sample users with UUID primary keys
-INSERT INTO USERS (ID, NAME, EMAIL, PASSWORD, CREATED_AT, UPDATED_AT)
+INSERT INTO USERS (ID, FIRST_NAME, LAST_NAME, EMAIL, PASSWORD, IMAGE, CREATED_AT, UPDATED_AT)
 VALUES
-('550e8400-e29b-41d4-a716-446655440000', 'Jane Smith', 'jane.smith@example.com', '$2a$10$xkd0LHAkxMQJqhN8/LewfBPCOYz6TtxMQJqhN8', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+('550e8400-e29b-41d4-a716-446655440000', 'Jane', 'Smith', 'jane.smith@example.com', '$2a$10$xkd0LHAkxMQJqhN8/LewfBPCOYz6TtxMQJqhN8', 'http://s3bucket1975913274917491hfkqhoqwo.aws.com/7439502iheirio', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO USERS (ID, NAME, EMAIL, PASSWORD, CREATED_AT, UPDATED_AT)
+INSERT INTO USERS (ID, FIRST_NAME, LAST_NAME, EMAIL, PASSWORD, IMAGE, CREATED_AT, UPDATED_AT)
 VALUES
-('550e8400-e29b-41d4-a716-446655440001', 'John Doe', 'john.doe@example.com', '$2a$10$$LQv3c1yqBWVHxkd0L$10$xkd0LH', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+('550e8400-e29b-41d4-a716-446655440001', 'John','Doe', 'john.doe@example.com', '$2a$10$$LQv3c1yqBWVHxkd0L$10$xkd0LH', 'http://s3bucket1975913274917491hfkqhoqwo.aws.com/743asfdsafsa',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO USERS (ID, NAME, EMAIL, PASSWORD, CREATED_AT, UPDATED_AT)
+INSERT INTO USERS (ID, FIRST_NAME, LAST_NAME,EMAIL, PASSWORD, IMAGE, CREATED_AT, UPDATED_AT)
 VALUES
-('550e8400-e29b-41d4-a716-446655440002', 'Alice Johnson', 'alice.johnson@example.com', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewfBPjJYfQgGpCQ2', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+('550e8400-e29b-41d4-a716-446655440002', 'Alice','Johnson', 'alice.johnson@example.com', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewfBPjJYfQgGpCQ2', 'http://s3bucket1975913274917491hfkqhoqwo.aws.com/7439502asfsaiheirio', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO USERS (ID, NAME, EMAIL, PASSWORD, CREATED_AT, UPDATED_AT)
+INSERT INTO USERS (ID, FIRST_NAME, LAST_NAME, EMAIL, PASSWORD, IMAGE, CREATED_AT, UPDATED_AT)
 VALUES
-('550e8400-e29b-41d4-a716-446655440003', 'Bob Wilson', 'bob.wilson@example.com', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewfBPjJYfQgGpCQ2', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+('550e8400-e29b-41d4-a716-446655440003', 'Bob', 'Wilson', 'bob.wilson@example.com', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewfBPjJYfQgGpCQ2', 'http://s3bucket1975913274917491hfkqhoqwo.aws.com/7439asfdsafasf502iheirio',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO USERS (ID, NAME, EMAIL, PASSWORD, CREATED_AT, UPDATED_AT)
+INSERT INTO USERS (ID, FIRST_NAME, LAST_NAME, EMAIL, PASSWORD, IMAGE, CREATED_AT, UPDATED_AT)
 VALUES
-('550e8400-e29b-41d4-a716-446655440004', 'Emily Davis', 'emily.davis@example.com', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewfBPjJYfQgGpCQ2', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+('550e8400-e29b-41d4-a716-446655440004', 'Emily','Davis', 'emily.davis@example.com', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewfBPjJYfQgGpCQ2', 'http://s3bucket1975913274917491hfkqhoqwo.aws.com/7439502iheiasf14312rio',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Insert sample addresses linked to users via UUID references
 INSERT INTO ADDRESSES (ID, USER_ID, STREET, CITY, STATE, COUNTRY, ZIP_CODE, TYPE, PRIMARY_ADDRESS, CREATED_AT, UPDATED_AT)
@@ -103,10 +105,4 @@ INSERT INTO ADDRESSES (ID, USER_ID, STREET, CITY, STATE, COUNTRY, ZIP_CODE, TYPE
 VALUES
 ('660e8400-e29b-41d4-a716-446655440006', '550e8400-e29b-41d4-a716-446655440004', '555 Elm Street Apt 4B', 'Fort Worth', 'TX', 'US', '76101', 'HOME', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
--- =====================================================
--- Setup Complete!
--- This script has created:
--- - Database: userdb20251202
--- - Tables: USERS, ADDRESSES
--- - Sample Data: 5 users, 7 addresses
--- =====================================================
+-- END OF SCRIPTS
