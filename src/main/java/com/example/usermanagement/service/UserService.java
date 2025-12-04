@@ -1,58 +1,40 @@
 package com.example.usermanagement.service;
 
-import com.example.usermanagement.entity.User;
-import com.example.usermanagement.exception.ResourceNotFoundException;
-import com.example.usermanagement.exception.EmailAlreadyExistsException;
-import com.example.usermanagement.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import com.example.usermanagement.entity.User;
+import com.example.usermanagement.exception.EmailAlreadyExistsException;
+import com.example.usermanagement.exception.ResourceNotFoundException;
+import com.example.usermanagement.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
+	private final UserRepository userRepository;
+	private final PasswordEncoder pwEncoder;
+	
+	public User createUser(User user) {
+		if(userRepository.findByEmail(user.getEmail()).isPresent())
+			throw new EmailAlreadyExistsException("Updated Email already exists!");
 
-    private final UserRepository userRepository;
-
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
-    public User getUserById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-    }
-
-    @Transactional
-    public User createUser(User user) {
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new EmailAlreadyExistsException("Email already exists: " + user.getEmail());
-        }
-        return userRepository.save(user);
-    }
-
-    @Transactional
-    public User updateUser(Long id, User userDetails) {
-        User user = getUserById(id);
-
-        // Check if email is being changed and if it already exists
-        if (!user.getEmail().equals(userDetails.getEmail()) &&
-                userRepository.existsByEmail(userDetails.getEmail())) {
-            throw new EmailAlreadyExistsException("Email already exists: " + userDetails.getEmail());
-        }
-
-        user.setName(userDetails.getName());
-        user.setEmail(userDetails.getEmail());
-        user.setPassword(userDetails.getPassword());
-
-        return userRepository.save(user);
-    }
-
-    @Transactional
-    public void deleteUser(Long id) {
-        User user = getUserById(id);
-        userRepository.delete(user);
-    }
+		user.setPassword(pwEncoder.encode(user.getPassword()));
+		return userRepository.save(user);
+	}
+	
+	public User updateUser(long id, User user) {
+		User foundUser = userRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " to update not found."));
+		
+		if(userRepository.findByEmail(user.getEmail()).isPresent())
+			throw new EmailAlreadyExistsException("Updated Email already exists!");
+		else
+			foundUser.setEmail(user.getEmail());
+		
+		foundUser.setName(user.getName());
+		foundUser.setPassword(pwEncoder.encode(user.getPassword()));
+		return userRepository.save(foundUser);
+	}
 }
