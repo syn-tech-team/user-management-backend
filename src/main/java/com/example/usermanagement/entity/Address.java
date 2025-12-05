@@ -5,6 +5,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+
+/*
+ * NOT UPDATED ACCORDING TO SQL SCHEMA YET!!! 
+ * This is only in the repository so that the List<Address> in User will compile
+ */
 @Entity
 @Data
 @Table(name="ADDRESSES")
