@@ -29,7 +29,7 @@ public class Address {
             fetch = FetchType.LAZY,
             optional = true
     )
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "USER_ID")
     private User user;
 }
 

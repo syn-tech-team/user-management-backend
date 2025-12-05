@@ -1,5 +1,7 @@
 package com.example.usermanagement.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,11 +22,12 @@ public class UserService {
 		if(userRepository.findByEmail(user.getEmail()).isPresent())
 			throw new EmailAlreadyExistsException("Updated Email already exists!");
 
+		user.setCreatedAt(LocalDateTime.now());
 		user.setPassword(pwEncoder.encode(user.getPassword()));
 		return userRepository.save(user);
 	}
 	
-	public User updateUser(long id, User user) {
+	public User updateUser(String id, User user) {
 		User foundUser = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " to update not found."));
 		
@@ -33,7 +36,10 @@ public class UserService {
 		else
 			foundUser.setEmail(user.getEmail());
 		
-		foundUser.setName(user.getName());
+		foundUser.setFirstName(user.getFirstName());
+		foundUser.setLastName(user.getLastName());
+		foundUser.setImage(user.getImage());
+		foundUser.setUpdatedAt(LocalDateTime.now());
 		foundUser.setPassword(pwEncoder.encode(user.getPassword()));
 		return userRepository.save(foundUser);
 	}

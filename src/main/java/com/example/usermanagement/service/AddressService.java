@@ -29,7 +29,7 @@ public class AddressService {
     }
 
     @Transactional
-    public Address createAddress(Long userId, Address address) throws AddressAlreadyExistsException {
+    public Address createAddress(String userId, Address address) throws AddressAlreadyExistsException {
         if (address.getId() != null && addressRepository.existsById(address.getId())) {
             throw new AddressAlreadyExistsException("Address already exists: " + address.getId());
         }
