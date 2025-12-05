@@ -28,7 +28,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser( @RequestBody User user) {
+    public ResponseEntity<User> createUser(@RequestBody User user) {
         User createdUser = userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
@@ -36,11 +36,18 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(
             @PathVariable Long id,
-             @RequestBody User userDetails) {
+            @RequestBody User userDetails) {
         User updatedUser = userService.updateUser(id, userDetails);
         return ResponseEntity.ok(updatedUser);
     }
 
+    /*
+     * @DeleteMapping("/{id}")
+     * public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+     * userService.deleteUser(id);
+     * return ResponseEntity.noContent().build();
+     * }
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
