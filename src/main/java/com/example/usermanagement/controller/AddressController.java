@@ -29,7 +29,7 @@ public class AddressController {
     }
 
     @PostMapping("/user/{userId}")
-    public ResponseEntity<Address> createAddress( @PathVariable Long userId, @RequestBody Address address) throws AddressAlreadyExistsException {
+    public ResponseEntity<Address> createAddress( @PathVariable String userId, @RequestBody Address address) throws AddressAlreadyExistsException {
         Address createdAddress = addressService.createAddress(userId, address);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdAddress);
     }
