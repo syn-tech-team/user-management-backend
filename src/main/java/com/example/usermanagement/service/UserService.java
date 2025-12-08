@@ -43,4 +43,14 @@ public class UserService {
 		foundUser.setPassword(pwEncoder.encode(user.getPassword()));
 		return userRepository.save(foundUser);
 	}
+
+	public void deleteUser(String userId) {
+
+        // Check if user exists
+        var user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
+
+        // Delete will also remove all addresses because of cascade + orphanRemoval
+        userRepository.delete(user);
+    }
 }
