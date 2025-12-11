@@ -56,6 +56,7 @@ public class UserEventProducer {
         // You can add additional error handling here, like metrics or retry logic
     }
 
+    //UMBE
     private UserEvent createUserEvent(User user, UserEventType eventType) {
         return UserEvent.builder()
                 .userId(user.getId())
