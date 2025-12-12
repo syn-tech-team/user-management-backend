@@ -37,4 +37,24 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.ok("User deleted successfully");
     }
+
+    //aileen
+    @PostMapping("/{userId}/activate")
+    public ResponseEntity<User> activateUser(@PathVariable String userId) {
+        User user = userService.activateUser(userId);
+        return ResponseEntity.ok(user);
+    }
+
+    @PostMapping("/{userId}/deactivate")
+    public ResponseEntity<User> deactivateUser(@PathVariable String userId) {
+        User user = userService.deactivateUser(userId);
+        return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> getUserById(@PathVariable String userId) {
+        User user = userService.getUserById(userId);
+        return ResponseEntity.ok(user);
+    }
+
 }

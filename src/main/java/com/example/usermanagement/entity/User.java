@@ -51,6 +51,9 @@ public class User {
     @Column(name = "UPDATED_AT")
     private LocalDateTime updatedAt;
 
+    //aileen
+    private boolean active;
+
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL,

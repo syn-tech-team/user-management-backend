@@ -2,9 +2,11 @@ package com.example.usermanagement;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.kafka.annotation.EnableKafka;
 
 @SpringBootApplication
-
+//ailleen
+@EnableKafka  // Make sure this is here
 public class UserManagementApplication {
 
     public static void main(String[] args) {

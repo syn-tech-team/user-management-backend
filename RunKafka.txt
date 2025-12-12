@@ -1,0 +1,45 @@
+Start Kafka in KRaft Mode
+
+1. Use your docker-compose.yml with this command:
+docker-compose up -d
+
+2. Verify the topic (optional):
+   docker exec -it kafka kafka-topics --list --bootstrap-server localhost:9092
+
+3. Start a Console Consumer
+docker exec -it kafka kafka-console-consumer \
+  --bootstrap-server localhost:9092 \
+  --topic user.events \
+  --from-beginning \
+  --property print.key=true \
+  --property print.timestamp=true
+
+4. Test Your Application
+Start your Spring Boot application
+Make a request to create a user:
+
+curl -X POST http://localhost:8080/api/users \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","firstName":"John","lastName":"Doe","password":"password123"}'
+
+5. Verify the Event
+Check the console consumer output. You should see the event in JSON format.
+
+6. Check Logs
+View your application logs for the "Sent USER_CREATED event" message.
+
+7. Additional Verification
+List topics and check message count:
+
+# List all topics
+docker exec -it kafka kafka-topics --list --bootstrap-server localhost:9092
+
+# Check message count
+docker exec -it kafka kafka-run-class kafka.tools.GetOffsetShell \
+  --bootstrap-server localhost:9092 \
+  --topic user.events \
+  --time -1
+8. Stop Kafka
+When done, clean up:
+
+docker-compose down -v
