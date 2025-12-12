@@ -13,6 +13,6 @@ public record UserEvent(
         @Email String email,
         @NotBlank String fullName,
         @NotBlank UserEventType eventType,
-        LocalDateTime timestamp ){
+        git LocalDateTime timestamp ){
 
 };
