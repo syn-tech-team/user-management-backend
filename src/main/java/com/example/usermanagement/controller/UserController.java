@@ -2,6 +2,7 @@ package com.example.usermanagement.controller;
 
 import com.example.usermanagement.dto.AddressCreateRequest;
 import com.example.usermanagement.dto.AddressResponse;
+import com.example.usermanagement.dto.PasswordUpdateRequest;
 import com.example.usermanagement.dto.UserCreateRequest;
 import com.example.usermanagement.dto.UserResponse;
 import com.example.usermanagement.dto.UserUpdateRequest;
@@ -37,6 +38,14 @@ public class UserController {
         return ResponseEntity.ok().body(updatedUser);
     }
     
+    @PatchMapping("/{id}/password")
+    public ResponseEntity<Void> updatePassword(
+            @PathVariable String id,
+            @Valid @RequestBody PasswordUpdateRequest request) {
+        userService.updatePassword(id, request);
+        return ResponseEntity.noContent().build();
+    }
+    
     @PostMapping("/{userId}/addresses")
     public ResponseEntity<AddressResponse> addAddress(
             @PathVariable String userId,
@@ -52,5 +61,7 @@ public class UserController {
         userService.removeAddressFromUser(userId, addressId);
         return ResponseEntity.noContent().build();
     }
+    
+    
 
 }

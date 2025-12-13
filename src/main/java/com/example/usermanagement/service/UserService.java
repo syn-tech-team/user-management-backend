@@ -1,15 +1,18 @@
 package com.example.usermanagement.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.usermanagement.dto.AddressCreateRequest;
 import com.example.usermanagement.dto.AddressResponse;
 import com.example.usermanagement.dto.AddressUpdateRequest;
+import com.example.usermanagement.dto.PasswordUpdateRequest;
 import com.example.usermanagement.dto.UserCreateRequest;
 import com.example.usermanagement.dto.UserResponse;
 import com.example.usermanagement.dto.UserUpdateRequest;
 import com.example.usermanagement.entity.Address;
 import com.example.usermanagement.entity.User;
 import com.example.usermanagement.exception.EmailAlreadyExistsException;
+import com.example.usermanagement.exception.InvalidPasswordException;
 import com.example.usermanagement.exception.ResourceNotFoundException;
 import com.example.usermanagement.mapper.AddressMapper;
 import com.example.usermanagement.mapper.UserMapper;
@@ -25,6 +28,7 @@ public class UserService {
 	private final AddressRepository addressRepository;
 	private final UserMapper userMapper;
 	private final AddressMapper addressMapper;
+	private final PasswordEncoder pwEncoder;
 	
 	public UserResponse createUser(UserCreateRequest request) {
 		if(userRepository.findByEmail(request.getEmail()).isPresent())
@@ -78,6 +82,18 @@ public class UserService {
 	    userRepository.save(user);
 
 	    return userMapper.toResponse(user);
+	}
+	
+	public void updatePassword(String userId, PasswordUpdateRequest request) {
+	    User user = userRepository.findById(userId)
+	            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+	    if (!pwEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+	        throw new InvalidPasswordException("Current password is incorrect");
+	    }
+
+	    user.setPassword(pwEncoder.encode(request.getNewPassword()));
+	    userRepository.save(user);
 	}
 	
 	
