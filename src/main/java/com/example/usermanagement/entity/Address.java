@@ -8,11 +8,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-
-/*
- * NOT UPDATED ACCORDING TO SQL SCHEMA YET!!! 
- * This is only in the repository so that the List<Address> in User will compile
- */
 @Entity
 @Table(name = "ADDRESSES")
 @Data
@@ -61,6 +56,7 @@ public class Address {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ToString.Exclude
     @JoinColumn(nullable = false)
     private User user;
 

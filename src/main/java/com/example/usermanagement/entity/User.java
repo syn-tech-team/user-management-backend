@@ -1,9 +1,7 @@
 package com.example.usermanagement.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,10 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 @Entity
 @Table(name = "USERS")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -32,20 +32,15 @@ public class User {
     }
 
     @Column(name = "FIRST_NAME", nullable = false)
-    @NotBlank(message = "First name is required")
     private String firstName;
 
     @Column(name = "LAST_NAME", nullable = false)
-    @NotBlank(message = "Last name is required")
     private String lastName;
 
     @Column(nullable = false, unique = true)
-    @Email(message = "Email must be valid")
-    @NotBlank(message = "Email is required")
     private String email;
 
     @Column(nullable = false)
-    @NotBlank(message = "Password is required")
     private String password;
 
     @Column(length = 1024)
@@ -63,11 +58,13 @@ public class User {
             orphanRemoval = true,
             fetch = FetchType.LAZY
     )
-    @Valid
     private List<Address> addresses  = new ArrayList<>();
     
     @PreUpdate
     public void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+    
+
+
 }
