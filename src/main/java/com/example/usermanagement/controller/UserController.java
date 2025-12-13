@@ -1,35 +1,67 @@
 package com.example.usermanagement.controller;
 
-import com.example.usermanagement.entity.User;
+import com.example.usermanagement.dto.AddressCreateRequest;
+import com.example.usermanagement.dto.AddressResponse;
+import com.example.usermanagement.dto.PasswordUpdateRequest;
+import com.example.usermanagement.dto.UserCreateRequest;
+import com.example.usermanagement.dto.UserResponse;
+import com.example.usermanagement.dto.UserUpdateRequest;
 import com.example.usermanagement.service.UserService;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
 
     private final UserService userService;
 
 
     @PostMapping
-    public ResponseEntity<User> createUser( @RequestBody User user) {
-        User createdUser = userService.createUser(user);
+    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserCreateRequest user) {
+        UserResponse createdUser = userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserResponse> updateUser(
             @PathVariable String id,
-             @RequestBody User userDetails) {
-        User updatedUser = userService.updateUser(id, userDetails);
-        return ResponseEntity.ok(updatedUser);
+            @Valid @RequestBody UserUpdateRequest request
+    ) {
+    	UserResponse updatedUser = userService.updateUser(id, request);
+        return ResponseEntity.ok().body(updatedUser);
     }
+    
+    @PatchMapping("/{id}/password")
+    public ResponseEntity<Void> updatePassword(
+            @PathVariable String id,
+            @Valid @RequestBody PasswordUpdateRequest request) {
+        userService.updatePassword(id, request);
+        return ResponseEntity.noContent().build();
+    }
+    
+    @PostMapping("/{userId}/addresses")
+    public ResponseEntity<AddressResponse> addAddress(
+            @PathVariable String userId,
+            @Valid @RequestBody AddressCreateRequest request) {
+        AddressResponse response = userService.addAddressToUser(userId, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{userId}/addresses/{addressId}")
+    public ResponseEntity<Void> removeAddress(
+            @PathVariable String userId,
+            @PathVariable String addressId) {
+        userService.removeAddressFromUser(userId, addressId);
+        return ResponseEntity.noContent().build();
+    }
+    
+    
 
 }

@@ -33,6 +33,17 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
+    
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidPasswordException(InvalidPasswordException ex){
+    	ErrorResponse error = new ErrorResponse(
+    			HttpStatus.UNAUTHORIZED.value(),
+    			ex.getMessage(),
+    			LocalDateTime.now()
+    	);
+    	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    			
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
@@ -54,6 +65,8 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
+    
+
 }
 
 // ErrorResponse class
