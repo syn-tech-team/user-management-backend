@@ -43,4 +43,26 @@ public class UserService {
 		foundUser.setPassword(pwEncoder.encode(user.getPassword()));
 		return userRepository.save(foundUser);
 	}
+
+    public void deleteUserById(String id) {
+        if (id == null || id.isBlank()) {
+            throw new IllegalArgumentException("User id must be provided");
+        }
+
+        User foundUser = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found."));
+
+        userRepository.delete(foundUser);
+    }
+
+    public void deleteUserByEmail(String email) {
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("Email must be provided");
+        }
+
+        User foundUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User with email " + email + " not found."));
+
+        userRepository.delete(foundUser);
+    }
 }
