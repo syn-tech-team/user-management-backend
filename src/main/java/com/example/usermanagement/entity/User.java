@@ -60,6 +60,7 @@ public class User {
     )
     private List<Address> addresses  = new ArrayList<>();
     
+    private Boolean isActive;
     @PreUpdate
     public void onUpdate() {
         updatedAt = LocalDateTime.now();

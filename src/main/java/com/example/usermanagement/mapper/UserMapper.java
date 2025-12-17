@@ -23,6 +23,7 @@ public class UserMapper {
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setImage(request.getImage());
+        user.setIsActive(true);
         return user;
     }
 
@@ -39,6 +40,10 @@ public class UserMapper {
         if (request.getImage() != null) {
         	user.setImage(request.getImage());
         }
+        if (request.getIsActive() != null) {
+            user.setIsActive(request.getIsActive());
+        }
+
     }
 
     public UserResponse toResponse(User user) {
@@ -48,6 +53,7 @@ public class UserMapper {
                 .lastName(user.getLastName())
                 .email(user.getEmail())
                 .image(user.getImage())
+                .isActive(user.getIsActive())
                 .build();
     }
 }

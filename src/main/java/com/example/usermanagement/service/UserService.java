@@ -42,15 +42,12 @@ public class UserService {
 	public UserResponse updateUser(String userId, UserUpdateRequest request) {
 	    User user = userRepository.findById(userId)
 	            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-	    if (request.getFirstName() != null) user.setFirstName(request.getFirstName());
-	    if (request.getLastName() != null) user.setLastName(request.getLastName());
 	    if (request.getEmail() != null &&
 	        userRepository.existsByEmailAndIdNot(request.getEmail(), userId)) {
 	        throw new EmailAlreadyExistsException("Email already exists");
 	    }
-	    if (request.getEmail() != null) user.setEmail(request.getEmail());
-
+	    userMapper.updateEntity(request, user);
+	    
 	    if (request.getAddresses() != null) {
 	        for (AddressUpdateRequest dto : request.getAddresses()) {
 	            if (dto.getId() != null) {
@@ -77,6 +74,7 @@ public class UserService {
 		        existing.getId() != null && request.getAddresses().stream()
 		            .noneMatch(dto -> dto.getId() != null && dto.getId().equals(existing.getId()))
 		    );
+		    
 	    }
 
 	    userRepository.save(user);

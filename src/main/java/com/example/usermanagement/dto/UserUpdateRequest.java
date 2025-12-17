@@ -29,6 +29,7 @@ public class UserUpdateRequest {
     private String email;
     
     private String image;
+    private Boolean isActive;
     @Valid
     private List<AddressUpdateRequest> addresses;
 }
