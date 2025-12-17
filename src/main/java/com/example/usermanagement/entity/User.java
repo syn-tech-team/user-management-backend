@@ -2,7 +2,6 @@ package com.example.usermanagement.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,12 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 @Entity
 @Table(name = "USERS")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class User {
 
     @Id
@@ -24,10 +23,12 @@ public class User {
     private String id;
     
     @PrePersist
-    public void generateId() {
+    public void onCreate() {
         if (id == null) {
             id = java.util.UUID.randomUUID().toString();
         }
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
     @Column(name = "FIRST_NAME", nullable = false)
@@ -57,6 +58,14 @@ public class User {
             orphanRemoval = true,
             fetch = FetchType.LAZY
     )
-    @Builder.Default
     private List<Address> addresses  = new ArrayList<>();
+    
+    private Boolean isActive;
+    @PreUpdate
+    public void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+    
+
+
 }
