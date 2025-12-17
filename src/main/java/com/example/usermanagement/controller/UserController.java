@@ -5,9 +5,11 @@ import com.example.usermanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -18,7 +20,7 @@ public class UserController {
     private final UserService userService;
 
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<User> createUser( @RequestBody User user) {
         User createdUser = userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
@@ -30,6 +32,11 @@ public class UserController {
              @RequestBody User userDetails) {
         User updatedUser = userService.updateUser(id, userDetails);
         return ResponseEntity.ok(updatedUser);
+    }
+
+    @GetMapping("/userinfo")
+    public Map<String, String> getUserInfo(Authentication auth) {
+        return Map.of("useremail", auth.getName());
     }
 
 }
